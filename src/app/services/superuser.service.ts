@@ -5,11 +5,11 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root'
 })
-export class UsersService {
+export class SuperuserService {
 
   constructor(private http: HttpClient) { }
 
-  loginUser(user: any){
-    return this.http.post(environment.paths.users.userLogin, user, {observe: 'response', withCredentials: true})
+  loginSuperUser(user: any){
+    return this.http.post(environment.paths.superUsers.superUserLogin, user, {observe: 'response', withCredentials: true})
   }
 }

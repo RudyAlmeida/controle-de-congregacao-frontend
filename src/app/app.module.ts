@@ -1,3 +1,6 @@
+import { AdminLoginComponent } from './admin/login/login.component';
+import { AdminDashboardComponent } from './admin/dashboard/dashboard.component';
+import { SuperUserLoginComponent } from './superuser/login/login.component';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -35,6 +38,11 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
 import { InputTextareaModule } from 'primeng/inputtextarea';
+import { FooterGreenComponent } from './template/footer-green/footer-green.component';
+import { FooterBlackComponent } from './template/footer-black/footer-black.component';
+import { HeaderGreenComponent } from './template/header-green/header-green.component';
+import { HeaderBlackComponent } from './template/header-black/header-black.component';
+import { SuperUserDashboardComponent } from './superuser/dashboard/dashboard.component';
 
 
 @NgModule({
@@ -43,7 +51,15 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
     LoginComponent,
     DashboardComponent,
     HeaderBlueComponent,
-    FooterBlueComponent
+    FooterBlueComponent,
+    FooterGreenComponent,
+    FooterBlackComponent,
+    HeaderGreenComponent,
+    HeaderBlackComponent,
+    SuperUserLoginComponent,
+    SuperUserDashboardComponent,
+    AdminDashboardComponent,
+    AdminLoginComponent
   ],
   imports: [
     BrowserModule,
