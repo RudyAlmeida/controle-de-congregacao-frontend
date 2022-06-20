@@ -3,7 +3,20 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  paths: {
+    users: {
+      userRoutes: 'http://localhost:3000/user/',
+      userLogin: 'http://localhost:3000/user/login/'
+    },
+    superUsers: {
+      superUserRoutes: 'http://localhost:3000/superUsers/',
+      superUserLogin: 'http://localhost:3000/superUsers/login/',
+    },
+    congregation: {
+      congregationRoutes: 'http://localhost:3000/congregation/'
+    }
+  }
 };
 
 /*
