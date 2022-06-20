@@ -1,65 +1,68 @@
 <app-header-blue></app-header-blue>
+
+<section class="d-flex align-items-center vh-100 mt-5  align-middle">
+
 <p-toast></p-toast>
 
-<div class="card">
+<div class="card w-100">
     <p-toolbar styleClass="mb-4">
         <ng-template pTemplate="left">
-            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
-            <button pButton pRipple [label]="Delete" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedProducts()" [disabled]="!selectedProducts || !selectedProducts.length"></button>
+            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success me-2 mb-2" (click)="openNew()"></button>
+            <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger mb-2" (click)="deleteSelectedProducts()" [disabled]="!selectedProducts || !selectedProducts.length"></button>
         </ng-template>
 
         <ng-template pTemplate="right">
-            <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="mr-2 inline-block"></p-fileUpload>
+            <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="me-2 inline-block"></p-fileUpload>
             <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
         </ng-template>
     </p-toolbar>
 
-    <p-table #dt [value]="products" [rows]="10" [paginator]="true" [globalFilterFields]="['name','country.name','representative.name','status']" responsiveLayout="scroll"
-        [(selection)]="selectedProducts" [rowHover]="true" dataKey="id"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+    <p-table #dt [value]="products" [rows]="7" [paginator]="true" [globalFilterFields]="['name','country.name','representative.name','status']" responsiveLayout="scroll"
+        [(selection)]="selectedProducts" [rowHover]="true" dataKey="id" [scrollable]="true" scrollHeight="50vh"
+        currentPageReportTemplate="Mostrando de {first} a {last} de {totalRecords} datas relatadas" [showCurrentPageReport]="true">
         <ng-template pTemplate="caption">
-            <div class="flex align-items-center justify-content-between">
+            <!-- <div class="flex align-items-center justify-content-between">
                 <h5 class="m-0">Manage Products</h5>
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
-                    <input pInputText type="text" (input)="dt.filterGlobal($event.target.value, 'contains')" placeholder="Search..." />
+                    <input pInputText type="text" (input)="dt.filterGlobal($event.target, 'contains')" placeholder="Search..." />
                 </span>
-            </div>
+            </div> -->
         </ng-template>
         <ng-template pTemplate="header">
             <tr>
                 <th style="width: 3rem">
                     <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
                 </th>
-                <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
-                <th>Image</th>
-                <th pSortableColumn="price">Price <p-sortIcon field="price"></p-sortIcon></th>
-                <th pSortableColumn="category">Category <p-sortIcon field="category"></p-sortIcon></th>
-                <th pSortableColumn="rating">Reviews <p-sortIcon field="rating"></p-sortIcon></th>
-                <th pSortableColumn="inventoryStatus">Status <p-sortIcon field="inventoryStatus"></p-sortIcon></th>
+                <th pSortableColumn="day">Dia <p-sortIcon field="day"></p-sortIcon></th>
+                <th pSortableColumn="publications">Publicações <p-sortIcon field="publications"></p-sortIcon></th>
+                <th pSortableColumn="videos">Videos Mostrados <p-sortIcon field="videos"></p-sortIcon></th>
+                <th pSortableColumn="hours">Horas <p-sortIcon field="hours"></p-sortIcon></th>
+                <th pSortableColumn="revisting">Revisitas <p-sortIcon field="revisting"></p-sortIcon></th>
+                <th pSortableColumn="studies">Estudos biblicos <p-sortIcon field="studies"></p-sortIcon></th>
                 <th></th>
             </tr>
         </ng-template>
-        <ng-template pTemplate="body" let-product>
+        <ng-template pTemplate="body" let-registry>
             <tr>
                 <td>
-                    <p-tableCheckbox [value]="product"></p-tableCheckbox>
+                    <p-tableCheckbox [value]="registry"></p-tableCheckbox>
                 </td>
-                <td>{{product.name}}</td>
-                <td><img [src]="'assets/showcase/images/demo/product/' + product.image" [alt]="product.name" width="100" class="shadow-4" /></td>
-                <td>{{product.price | currency:'USD'}}</td>
-                <td>{{product.category}}</td>
-                <td><p-rating [ngModel]="product.rating" [readonly]="true" [cancel]="false"></p-rating></td>
-                <td><span [class]="'product-badge status-' + (product.inventoryStatus ? product.inventoryStatus.toLowerCase() : '')">{{product.inventoryStatus}}</span></td>
+                <td>{{registry.day}}</td>
+                <td>{{registry.publications}}</td>
+                <td>{{registry.videos}}</td>
+                <td>{{registry.hours}}</td>
+                <td>{{registry.revisiting}}</td>
+                <td>{{registry.studies}}</td>
                 <td>
-                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editProduct(product)"></button>
-                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteProduct(product)"></button>
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editProduct(registry)"></button>
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteProduct(registry)"></button>
                 </td>
             </tr>
         </ng-template>
         <ng-template pTemplate="summary">
             <div class="flex align-items-center justify-content-between">
-                In total there are {{products ? products.length : 0 }} products.
+                Total de horas no mês {{products ? totalHours : 0 }}.
             </div>
         </ng-template>
     </p-table>
@@ -127,5 +130,8 @@
 </p-dialog>
 
 <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+</section>
+
 
 <app-footer-blue></app-footer-blue>
