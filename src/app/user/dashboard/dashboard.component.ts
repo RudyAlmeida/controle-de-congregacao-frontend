@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
+import { PrimeNGConfig } from 'primeng/api';
 
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css'],
+  styleUrls: ['./dashboard.component.scss'],
   providers: [MessageService,ConfirmationService]
 })
 export class DashboardComponent implements OnInit {
@@ -21,15 +22,57 @@ export class DashboardComponent implements OnInit {
   submitted!: boolean;
 
   statuses!: any[];
-  constructor(private messageService: MessageService, private confirmationService: ConfirmationService) { }
+
+  totalHours: number = 0;
+  constructor(private primengConfig: PrimeNGConfig, private messageService: MessageService, private confirmationService: ConfirmationService) { }
 
   ngOnInit(): void {
-
+    this.primengConfig.ripple = true;
     this.statuses = [
         {label: 'INSTOCK', value: 'instock'},
         {label: 'LOWSTOCK', value: 'lowstock'},
         {label: 'OUTOFSTOCK', value: 'outofstock'}
     ];
+
+    this.products = [
+      {
+        id: '1', day: '1', publications: '2', videos: '3', hours: '5', revisiting: '1', studies: '1'
+      },
+      {
+        id: '2', day: '3', publications: '2', videos: '3', hours: '5', revisiting: '1', studies: '1'
+      },
+      {
+        id: '3', day: '5', publications: '2', videos: '3', hours: '5', revisiting: '1', studies: '1'
+      },
+      {
+        id: '4', day: '8', publications: '2', videos: '3', hours: '5', revisiting: '1', studies: '1'
+      },
+      {
+        id: '5', day: '10', publications: '2', videos: '3', hours: '5', revisiting: '1', studies: '1'
+      },
+      {
+        id: '6', day: '13', publications: '2', videos: '3', hours: '5', revisiting: '1', studies: '1'
+      },
+      {
+        id: '7', day: '15', publications: '2', videos: '3', hours: '5', revisiting: '1', studies: '1'
+      },
+      {
+        id: '8', day: '18', publications: '2', videos: '3', hours: '7', revisiting: '1', studies: '1'
+      },
+      {
+        id: '9', day: '20', publications: '2', videos: '3', hours: '5', revisiting: '1', studies: '1'
+      },
+      {
+        id: '10', day: '21', publications: '2', videos: '3', hours: '5', revisiting: '1', studies: '1'
+      },
+      {
+        id: '11', day: '23', publications: '2', videos: '3', hours: '5', revisiting: '1', studies: '1'
+      }
+    ]
+
+    this.products.forEach(e => {
+      this.totalHours += Number(e.hours)
+    })
   }
   openNew() {
     this.product = {};
