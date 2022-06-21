@@ -7,7 +7,8 @@ export const environment = {
   paths: {
     users: {
       userRoutes: 'http://localhost:3000/user/',
-      userLogin: 'http://localhost:3000/user/login/'
+      userLogin: 'http://localhost:3000/user/login/',
+      userByCongragation: 'http://localhost:3000/user/congregation/',
     },
     superUsers: {
       superUserRoutes: 'http://localhost:3000/superUsers/',
