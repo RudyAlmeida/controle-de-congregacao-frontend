@@ -43,6 +43,7 @@ import { FooterBlackComponent } from './template/footer-black/footer-black.compo
 import { HeaderGreenComponent } from './template/header-green/header-green.component';
 import { HeaderBlackComponent } from './template/header-black/header-black.component';
 import { SuperUserDashboardComponent } from './superuser/dashboard/dashboard.component';
+import { SelectButtonModule } from 'primeng/selectbutton';
 
 
 @NgModule({
@@ -87,6 +88,7 @@ import { SuperUserDashboardComponent } from './superuser/dashboard/dashboard.com
     InputNumberModule,
     ConfirmDialogModule,
     InputTextareaModule,
+    SelectButtonModule
   ],
   providers: [
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
