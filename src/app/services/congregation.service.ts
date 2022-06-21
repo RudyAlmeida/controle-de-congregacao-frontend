@@ -11,8 +11,9 @@ export class CongregationService {
 
 
   getAllCongregations(){
-    let user: any
-    user.token = localStorage.getItem('jwt-token-superuser')
+    let user = {
+      token: localStorage.getItem('jwt-token-superuser')
+    }
     return this.http.post(environment.paths.congregation.congregationRoutes+'/getall', user, {observe: 'response', withCredentials: true})
   }
   saveCongregation(congregation: any){
