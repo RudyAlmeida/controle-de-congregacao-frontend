@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from './../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -9,11 +9,15 @@ export class CongregationService {
 
   constructor(private http: HttpClient) { }
 
+  jwt = localStorage.getItem('jwt-token-superuser')
+
+  headers = new HttpHeaders({ 'Cookie': String(this.jwt)});
+
   getAllCongregations(){
-    return this.http.get(environment.paths.congregation.congregationRoutes, {withCredentials: true})
+    return this.http.get(environment.paths.congregation.congregationRoutes, {withCredentials: true, headers: this.headers})
   }
   saveCongregation(congregation: any){
-    return this.http.post(environment.paths.congregation.congregationRoutes, congregation, {observe: 'response', withCredentials: true})
+    return this.http.post(environment.paths.congregation.congregationRoutes, congregation, {observe: 'response', withCredentials: true, })
   }
   updateCongregation(congregation: any){
     return this.http.patch(environment.paths.congregation.congregationRoutes, congregation, {observe: 'response', withCredentials: true})
