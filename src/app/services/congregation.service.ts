@@ -11,13 +11,13 @@ export class CongregationService {
 
   jwt = localStorage.getItem('jwt-token-superuser')
 
-  headers = new HttpHeaders({ 'Cookie': document.cookie});
 
-  getAllCongregations(){
-    return this.http.get(environment.paths.congregation.congregationRoutes, {withCredentials: true, headers: this.headers})
+
+  getAllCongregations(user: any){
+    return this.http.get(environment.paths.congregation.congregationRoutes, {observe: 'response', withCredentials: true})
   }
   saveCongregation(congregation: any){
-    return this.http.post(environment.paths.congregation.congregationRoutes, congregation, {observe: 'response', withCredentials: true, })
+    return this.http.post(environment.paths.congregation.congregationRoutes, congregation, {observe: 'response', withCredentials: true })
   }
   updateCongregation(congregation: any){
     return this.http.patch(environment.paths.congregation.congregationRoutes, congregation, {observe: 'response', withCredentials: true})
