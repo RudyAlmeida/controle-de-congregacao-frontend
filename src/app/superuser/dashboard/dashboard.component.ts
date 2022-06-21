@@ -37,8 +37,8 @@ export class SuperUserDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.primengConfig.ripple = true;
-    this.congregationService.getAllCongregations().subscribe(res =>{
-      this.congregations = res as Congregation[]
+    this.congregationService.getAllCongregations().subscribe((res)  =>{
+      this.congregations = res as unknown as Congregation[]
     })
   }
   openNew() {
