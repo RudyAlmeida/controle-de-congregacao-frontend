@@ -12,3 +12,11 @@ export interface User {
   phone: String,
   role: String
 }
+
+export interface SuperUser {
+  _id?: String,
+  name: String,
+  email: String,
+  password: String,
+  role: String
+}

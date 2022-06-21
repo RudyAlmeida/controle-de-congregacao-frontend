@@ -9,6 +9,7 @@
               <button pButton pRipple label="Adicionar" icon="pi pi-plus" class="p-button-success me-2 mb-2" (click)="openNew()"></button>
               <button pButton pRipple label="Deletar" icon="pi pi-trash" class="p-button-danger me-2 mb-2" (click)="deleteSelectedcongregations()" [disabled]="!selectedCongregations || !selectedCongregations.length"></button>
               <button pButton pRipple label="Ancião" icon="pi pi-plus" class="p-button-warning mb-2" (click)="openAnciao(selectedCongregations[0])" [disabled]="!selectedCongregations || !selectedCongregations.length"></button>
+              <button pButton pRipple label="Super User" icon="pi pi-plus" class="p-button-dark me-2 mb-2" (click)="openSuperUser()"></button>
           </ng-template>
 
           <ng-template pTemplate="right">
@@ -114,7 +115,29 @@
         <button pButton pRipple label="Salvar" icon="pi pi-check" class="p-button-text" (click)="savecongregation()"></button>
     </ng-template>
 </p-dialog>
-
+<p-dialog [(visible)]="superUserDialog" [style]="{width: '450px'}" header="Crie um Super User" [modal]="true" styleClass="p-fluid">
+  <ng-template pTemplate="content">
+      <div class="field">
+          <label for="superUserName">Name</label>
+          <input type="text" pInputText id="superUserName" [(ngModel)]="superUser.name" required autofocus />
+          <small class="p-error" *ngIf="submitted && !superUser.name">Nome é obrigatorio.</small>
+      </div>
+      <div class="field">
+        <label for="superUserEmail">E-mail</label>
+        <input type="text" pInputText id="superUserEmail" [(ngModel)]="superUser.email" required autofocus />
+        <small class="p-error" *ngIf="submitted && !superUser.email">E-mail é obrigatorio.</small>
+    </div>
+    <div class="field">
+      <label for="superUserPassword">Senha</label>
+      <input type="password" pInputText id="superUserPassword" [(ngModel)]="superUser.password" required autofocus />
+      <small class="p-error" *ngIf="submitted && !superUser.password">Senha é obrigatorio.</small>
+  </div>
+  </ng-template>
+  <ng-template pTemplate="footer">
+      <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideSuperUser()"></button>
+      <button pButton pRipple label="Salvar" icon="pi pi-check" class="p-button-text" (click)="addSuperUser()"></button>
+  </ng-template>
+</p-dialog>
   <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
 
   </section>

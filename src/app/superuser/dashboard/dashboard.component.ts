@@ -1,3 +1,4 @@
+import { SuperUser } from './../../interfaces/interfaces';
 import { UsersService } from './../../services/users.service';
 import { CongregationService } from './../../services/congregation.service';
 import { SuperuserService } from 'src/app/services/superuser.service';
@@ -25,7 +26,11 @@ export class SuperUserDashboardComponent implements OnInit {
 
   submitted!: boolean;
 
+  superUserDialog!: boolean;
+
   statuses!: any[];
+
+  superUser!: SuperUser
 
   user!: User
   roles: any[] = [
@@ -48,7 +53,13 @@ export class SuperUserDashboardComponent implements OnInit {
     this.submitted = false;
     this.congregationDialog = true;
 }
-
+openSuperUser() {
+  this.superUser = {} as SuperUser;
+  this.superUserDialog = true;
+}
+hideSuperUser() {
+  this.superUserDialog = false;
+}
 deleteSelectedcongregations() {
     this.confirmationService.confirm({
         message: 'Are you sure you want to delete the selected congregations?',
@@ -81,9 +92,7 @@ deletecongregation(congregation: Congregation) {
             }
             this.ngOnInit();
             this.congregation = {} as Congregation;
-            this.messageService.add({severity:'success', summary: 'Successful', detail: 'congregation Deleted', life: 3000});
           })
-
         }
     });
 }
@@ -136,6 +145,7 @@ addAnciao(){
   })
   this.anciaoDialog = false
   this.user = {} as User
+  this.congregation = {} as Congregation;
 }
 openAnciao(congregation: Congregation) {
   this.congregation = {...congregation};
@@ -157,6 +167,18 @@ findIndexById(id: string): number {
     }
 
     return index;
+}
+
+addSuperUser(){
+  this.superUser.role = 'superUser'
+  this.superService.addSuperUser(this.superUser).subscribe(res => {
+    if(res.status == 201){
+      this.messageService.add({severity:'success', summary: 'Successful', detail: 'Super usuario adicionado.', life: 3000})
+    } else {
+      this.messageService.add({severity:'error', summary: 'Fail', detail: 'Falha ao adicionar Super usuario', life: 3000});
+    }
+  })
+
 }
 
 }
