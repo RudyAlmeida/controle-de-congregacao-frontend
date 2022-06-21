@@ -17,7 +17,7 @@ export class SuperUserDashboardComponent implements OnInit {
 
   anciaoDialog!: boolean
 
-  congregations!: any[];
+  congregations!: Congregation[];
 
   congregation!: Congregation;
 
@@ -38,8 +38,9 @@ export class SuperUserDashboardComponent implements OnInit {
   ngOnInit(): void {
     this.primengConfig.ripple = true;
     this.congregationService.getAllCongregations().subscribe((res : any)  =>{
-      console.log(res)
-      this.congregations = res
+      if(res.status == 200){
+        this.congregations = res.body
+      }
     })
   }
   openNew() {
