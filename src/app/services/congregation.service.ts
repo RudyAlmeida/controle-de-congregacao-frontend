@@ -11,7 +11,7 @@ export class CongregationService {
 
   jwt = localStorage.getItem('jwt-token-superuser')
 
-  headers = new HttpHeaders({ 'Cookie': String(this.jwt)});
+  headers = new HttpHeaders({ 'Cookie': document.cookie});
 
   getAllCongregations(){
     return this.http.get(environment.paths.congregation.congregationRoutes, {withCredentials: true, headers: this.headers})
