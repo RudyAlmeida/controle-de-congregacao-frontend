@@ -12,20 +12,20 @@ export class CongregationService {
 
   getAllCongregations(){
     let user = {
-      token: localStorage.getItem('jwt-token-superuser')
+      token: localStorage.getItem('jwt-token')
     }
     return this.http.post(environment.paths.congregation.congregationRoutes+'/getall', user, {observe: 'response', withCredentials: true})
   }
   saveCongregation(congregation: any){
-    congregation.token = localStorage.getItem('jwt-token-superuser')
+    congregation.token = localStorage.getItem('jwt-token')
     return this.http.post(environment.paths.congregation.congregationRoutes, congregation, {observe: 'response', withCredentials: true })
   }
   updateCongregation(congregation: any){
-    congregation.token = localStorage.getItem('jwt-token-superuser')
+    congregation.token = localStorage.getItem('jwt-token')
     return this.http.patch(environment.paths.congregation.congregationRoutes, congregation, {observe: 'response', withCredentials: true})
   }
   deleteCongregation(congregation: any){
-    congregation.token = localStorage.getItem('jwt-token-superuser')
+    congregation.token = localStorage.getItem('jwt-token')
     return this.http.delete(environment.paths.congregation.congregationRoutes, {body: congregation, observe: 'response', withCredentials: true})
   }
   getOneCongregation(_id: any){
