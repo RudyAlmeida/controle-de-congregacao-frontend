@@ -13,7 +13,7 @@ export class SuperuserGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-      const token: any = localStorage.getItem('jwt-token-superuser')
+      const token: any = localStorage.getItem('jwt-token')
       if(!this.jwtHelper.isTokenExpired(token)){
         let decoded = this.jwtHelper.decodeToken(token)
         if(decoded.role == "superUser"){
