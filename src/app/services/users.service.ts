@@ -13,19 +13,24 @@ export class UsersService {
   loginUser(user: User){
     return this.http.post(environment.paths.users.userLogin, user, {observe: 'response', withCredentials: true})
   }
-  addUser(user: User){
+  addUser(user: User | any){
+    user.token = localStorage.getItem('jwt-token-superuser')
     return this.http.post(environment.paths.users.userRoutes, user, {observe: 'response', withCredentials: true})
   }
-  updateUser(user: User){
+  updateUser(user: User | any){
+    user.token = localStorage.getItem('jwt-token-superuser')
     return this.http.patch(environment.paths.users.userRoutes, user, {observe: 'response', withCredentials: true})
   }
-  deleteUser(user: User){
+  deleteUser(user: User | any){
+    user.token = localStorage.getItem('jwt-token-superuser')
     return this.http.delete(environment.paths.users.userRoutes, {body: user, observe: 'response', withCredentials: true})
   }
-  getOneUser(_id: any){
-    return this.http.get(environment.paths.users.userRoutes + _id, {observe: 'response', withCredentials: true})
+  getOneUser(user: User | any){
+    user.token = localStorage.getItem('jwt-token-superuser')
+    return this.http.post(environment.paths.users.userRoutes , user, {observe: 'response', withCredentials: true})
   }
   getUserByCongregation(_id: any){
-    return this.http.get(environment.paths.users.userByCongragation + _id, {observe: 'response', withCredentials: true})
+    _id.token = localStorage.getItem('jwt-token-superuser')
+    return this.http.post(environment.paths.users.userByCongragation, _id, {observe: 'response', withCredentials: true})
   }
 }
