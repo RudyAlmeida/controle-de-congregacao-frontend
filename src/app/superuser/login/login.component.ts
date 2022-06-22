@@ -19,7 +19,7 @@ export class SuperUserLoginComponent implements OnInit {
   }
   login(){
     this.superUser.loginSuperUser(this.user).subscribe((res: any) => {
-      localStorage.setItem('jwt-token-superuser', res.body.token);
+      localStorage.setItem('jwt-token', res.body.token);
       this.router.navigate(['/superuser/dashboard'])
     })
   }

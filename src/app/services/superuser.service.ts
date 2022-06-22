@@ -13,7 +13,8 @@ export class SuperuserService {
   loginSuperUser(user: any){
     return this.http.post(environment.paths.superUsers.superUserLogin, user, {observe: 'response', withCredentials: true})
   }
-  addSuperUser(superUser: SuperUser){
+  addSuperUser(superUser: SuperUser | any){
+    superUser.token = localStorage.getItem('jwt-token-superuser')
     return this.http.post(environment.paths.superUsers.superUserRoutes, superUser, {observe: 'response', withCredentials: true})
   }
 }
