@@ -1,7 +1,11 @@
+import { UsersService } from 'src/app/services/users.service';
+import { Registry, User } from './../../interfaces/interfaces';
 import { Component, OnInit } from '@angular/core';
 import { ConfirmationService } from 'primeng/api';
 import { MessageService } from 'primeng/api';
 import { PrimeNGConfig } from 'primeng/api';
+import { JwtHelperService } from '@auth0/angular-jwt';
+
 
 
 @Component({
@@ -11,136 +15,132 @@ import { PrimeNGConfig } from 'primeng/api';
   providers: [MessageService,ConfirmationService]
 })
 export class DashboardComponent implements OnInit {
-  productDialog!: boolean;
+  relatoryDialog!: boolean;
 
-  products!: any[];
+  relatorys!: any[];
 
-  product: any;
+  relatory: any = {}
 
-  selectedProducts!: any[]
+  selectedRelatorys!: any[]
 
   submitted!: boolean;
 
   statuses!: any[];
 
-  totalHours: number = 0;
-  constructor(private primengConfig: PrimeNGConfig, private messageService: MessageService, private confirmationService: ConfirmationService) { }
+  calendarDate!: Date;
+  maxDateValue!: Date;
+  minDateValue!: Date;
+
+  totalHours: any = {};
+  user!: User
+
+  registries: any = {}
+  monthAndYear: Date = new Date()
+  today: Date = new Date()
+  constructor(private jwtHelper: JwtHelperService, private userService: UsersService, private primengConfig: PrimeNGConfig, private messageService: MessageService, private confirmationService: ConfirmationService) { }
 
   ngOnInit(): void {
+    this.user = this.jwtHelper.decodeToken(<any>localStorage.getItem('jwt-token'))
+    this.maxDateValue =  new Date()
     this.primengConfig.ripple = true;
-    this.statuses = [
-        {label: 'INSTOCK', value: 'instock'},
-        {label: 'LOWSTOCK', value: 'lowstock'},
-        {label: 'OUTOFSTOCK', value: 'outofstock'}
-    ];
-
-    this.products = [
-      {
-        id: '1', day: '1', publications: '2', videos: '3', hours: '5', revisiting: '1', studies: '1'
-      },
-      {
-        id: '2', day: '3', publications: '2', videos: '3', hours: '5', revisiting: '1', studies: '1'
-      },
-      {
-        id: '3', day: '5', publications: '2', videos: '3', hours: '5', revisiting: '1', studies: '1'
-      },
-      {
-        id: '4', day: '8', publications: '2', videos: '3', hours: '5', revisiting: '1', studies: '1'
-      },
-      {
-        id: '5', day: '10', publications: '2', videos: '3', hours: '5', revisiting: '1', studies: '1'
-      },
-      {
-        id: '6', day: '13', publications: '2', videos: '3', hours: '5', revisiting: '1', studies: '1'
-      },
-      {
-        id: '7', day: '15', publications: '2', videos: '3', hours: '5', revisiting: '1', studies: '1'
-      },
-      {
-        id: '8', day: '18', publications: '2', videos: '3', hours: '7', revisiting: '1', studies: '1'
-      },
-      {
-        id: '9', day: '20', publications: '2', videos: '3', hours: '5', revisiting: '1', studies: '1'
-      },
-      {
-        id: '10', day: '21', publications: '2', videos: '3', hours: '5', revisiting: '1', studies: '1'
-      },
-      {
-        id: '11', day: '23', publications: '2', videos: '3', hours: '5', revisiting: '1', studies: '1'
-      }
-    ]
-
-    this.products.forEach(e => {
+    let today = new Date();
+    this.userService.getOneUser(this.user).subscribe((res: any) => {
+      this.relatorys = res.body[today.getFullYear()][today.getMonth()].registries
+      this.totalHours = {...res.body[today.getFullYear()][today.getMonth()].totals}
+      console.log(this.totalHours)
+    })
+    this.minDateValue = new Date(`${today.getFullYear() -1 }/${today.getMonth()}/1`)
+      this.relatorys.forEach(e => {
       this.totalHours += Number(e.hours)
     })
   }
   openNew() {
-    this.product = {};
+    this.relatory = {} as Registry;
     this.submitted = false;
-    this.productDialog = true;
+    this.relatoryDialog = true;
 }
 
-deleteSelectedProducts() {
+deleteSelectedrelatorys() {
+  console.log(this.selectedRelatorys)
+  console.log(this.monthAndYear)
+    // this.confirmationService.confirm({
+    //     message: 'Are you sure you want to delete the selected relatorys?',
+    //     header: 'Confirm',
+    //     icon: 'pi pi-exclamation-triangle',
+    //     accept: () => {
+    //         this.relatorys = this.relatorys.filter(val => !this.selectedRelatorys.includes(val));
+    //         this.selectedRelatorys = null as any;
+    //         this.messageService.add({severity:'success', summary: 'Successful', detail: 'relatorys Deleted', life: 3000});
+    //     }
+    // });
+}
+
+editrelatory(relatory: any) {
+    this.relatory = {...relatory};
+    this.relatoryDialog = true;
+}
+
+deleterelatory(relatory: any) {
     this.confirmationService.confirm({
-        message: 'Are you sure you want to delete the selected products?',
+        message: 'Are you sure you want to delete ' + relatory.name + '?',
         header: 'Confirm',
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
-            this.products = this.products.filter(val => !this.selectedProducts.includes(val));
-            this.selectedProducts = null as any;
-            this.messageService.add({severity:'success', summary: 'Successful', detail: 'Products Deleted', life: 3000});
-        }
-    });
-}
-
-editProduct(product: any) {
-    this.product = {...product};
-    this.productDialog = true;
-}
-
-deleteProduct(product: any) {
-    this.confirmationService.confirm({
-        message: 'Are you sure you want to delete ' + product.name + '?',
-        header: 'Confirm',
-        icon: 'pi pi-exclamation-triangle',
-        accept: () => {
-            this.products = this.products.filter(val => val.id !== product.id);
-            this.product = {};
-            this.messageService.add({severity:'success', summary: 'Successful', detail: 'Product Deleted', life: 3000});
+            this.relatorys = this.relatorys.filter(val => val.id !== relatory.id);
+            this.relatory = {} as Registry;
+            this.messageService.add({severity:'success', summary: 'Successful', detail: 'relatory Deleted', life: 3000});
         }
     });
 }
 
 hideDialog() {
-    this.productDialog = false;
+    this.relatoryDialog = false;
     this.submitted = false;
 }
 
-saveProduct() {
+saveRelatory() {
     this.submitted = true;
+    let today = new Date()
+    this.relatory.userId = this.user._id
+    this.relatory.reported = false
+    this.relatory.year = this.calendarDate.getFullYear().toString()
+    this.relatory.month = this.calendarDate.getMonth().toString()
+    this.relatory.day = this.calendarDate.getDate().toString()
 
-    if (this.product.name.trim()) {
-        if (this.product.id) {
-            this.products[this.findIndexById(this.product.id)] = this.product;
-            this.messageService.add({severity:'success', summary: 'Successful', detail: 'Product Updated', life: 3000});
-        }
-        else {
-            this.product.id = this.createId();
-            this.product.image = 'product-placeholder.svg';
-            this.products.push(this.product);
-            this.messageService.add({severity:'success', summary: 'Successful', detail: 'Product Created', life: 3000});
-        }
+    console.log(this.relatory)
 
-        this.products = [...this.products];
-        this.productDialog = false;
-        this.product = {};
-    }
+    this.userService.addRegistry(this.relatory).subscribe( res => {
+      if(res.status == 200){
+        this.messageService.add({severity:'success', summary: 'Successful', detail: 'Relatorio Adicionado', life: 3000})
+      } else {
+        this.messageService.add({severity:'error', summary: 'Fail', detail: 'Falha ao adicionar relatorio', life: 3000});
+      }
+      this.ngOnInit();
+      this.relatoryDialog = false
+    })
+
+    // if (this.relatory.name.trim()) {
+    //     if (this.relatory.id) {
+    //         this.relatorys[this.findIndexById(this.relatory.id)] = this.relatory;
+    //         this.messageService.add({severity:'success', summary: 'Successful', detail: 'relatory Updated', life: 3000});
+    //     }
+    //     else {
+    //         this.relatory.id = this.createId();
+    //         this.relatory.image = 'relatory-placeholder.svg';
+    //         this.relatorys.push(this.relatory);
+    //         this.messageService.add({severity:'success', summary: 'Successful', detail: 'relatory Created', life: 3000});
+    //     }
+
+    //     this.relatorys = [...this.relatorys];
+    //     this.relatoryDialog = false;
+    //     this.relatory = {};
+    // }
 }
 
 findIndexById(id: string): number {
     let index = -1;
-    for (let i = 0; i < this.products.length; i++) {
-        if (this.products[i].id === id) {
+    for (let i = 0; i < this.relatorys.length; i++) {
+        if (this.relatorys[i].id === id) {
             index = i;
             break;
         }

@@ -1,3 +1,174 @@
 <app-header-green></app-header-green>
+<section class="d-flex align-items-center vh-100 mt-1  align-middle">
+
+  <p-toast></p-toast>
+
+  <div class="card w-100">
+      <p-toolbar styleClass="mb-4">
+          <ng-template pTemplate="left">
+              <button pButton pRipple label="Adicionar" icon="pi pi-plus" class="p-button-success me-2 mb-2" (click)="openNew()"></button>
+              <button pButton pRipple label="Deletar" icon="pi pi-trash" class="p-button-danger me-2 mb-2" (click)="deleteSelectedmembers()" [disabled]="!selectedmembers || !selectedmembers.length"></button>
+              <h1 class="ms-5">Bem vindo a congregação: {{congregationName}}</h1>
+          </ng-template>
+
+          <ng-template pTemplate="right">
+              <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Import" class="me-2 inline-block"></p-fileUpload>
+              <button pButton pRipple label="Export" icon="pi pi-upload" class="p-button-help"></button>
+          </ng-template>
+      </p-toolbar>
+
+      <p-table #dt [value]="members" [rows]="7" [paginator]="true" [globalFilterFields]="['name','country.name','representative.name','status']" responsiveLayout="scroll"
+          [(selection)]="selectedmembers" [rowHover]="true" dataKey="_id" [scrollable]="true" scrollHeight="50vh"
+          currentPageReportTemplate="Mostrando de {first} a {last} de {totalRecords} datas relatadas" [showCurrentPageReport]="true">
+          <ng-template pTemplate="caption">
+              <div class="flex align-items-center justify-content-between">
+                  <h5 class="m-0">Procurar congregação</h5>
+                  <span class="p-input-icon-left">
+                      <i class="pi pi-search"></i>
+                      <input pInputText type="text" (input)="dt.filterGlobal($event.target, 'contains')" placeholder="Search..." />
+                  </span>
+              </div>
+          </ng-template>
+          <ng-template pTemplate="header">
+              <tr>
+                  <th style="width: 3rem">
+                      <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                  </th>
+                  <th pSortableColumn="_id">Id <p-sortIcon field="_id"></p-sortIcon></th>
+                  <th pSortableColumn="publications">Nome <p-sortIcon field="publications"></p-sortIcon></th>
+                  <th pSortableColumn="publications">Privilegio <p-sortIcon field="publications"></p-sortIcon></th>
+                  <th></th>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-registry>
+              <tr>
+                  <td>
+                      <p-tableCheckbox [value]="registry"></p-tableCheckbox>
+                  </td>
+                  <td>{{registry._id}}</td>
+                  <td>{{registry.name}}</td>
+                  <td>{{registry.role | titlecase}}</td>
+                  <td>
+                      <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success me-2" (click)="editmember(registry)"></button>
+                      <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deletemember(registry)"></button>
+                  </td>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="summary">
+              <div class="flex align-items-center justify-content-between">
+                  Total de membros {{members ? members.length : 0 }}.
+              </div>
+          </ng-template>
+      </p-table>
+  </div>
+
+  <p-dialog [(visible)]="anciaoDialog" [style]="{width: '450px'}" header="Adicione um ancião a congregação" [modal]="true" styleClass="p-fluid">
+      <ng-template pTemplate="content">
+        <div class="field">
+          <label for="memberId">Id da Congregação</label>
+          <input type="text" pInputText id="memberId" [(ngModel)]="member._id" readonly />
+      </div>
+      <div class="field">
+        <label for="membersName">Nome da congregação</label>
+        <input type="text" pInputText id="membersName" [(ngModel)]="member.name" readonly />
+    </div>
+          <div class="field">
+              <label for="anciaoName">Name</label>
+              <input type="text" pInputText id="nameAnciao" [(ngModel)]="member.name" required autofocus />
+              <small class="p-error" *ngIf="submitted && !member.name">Nome é obrigatorio.</small>
+          </div>
+          <div class="field">
+            <label for="email">E-mail</label>
+            <input type="text" pInputText id="emailAnciao" [(ngModel)]="member.email" required autofocus />
+            <small class="p-error" *ngIf="submitted && !member.email">E-mail é obrigatorio.</small>
+          </div>
+          <div class="field">
+            <label for="password">Senha</label>
+            <input type="password" pInputText id="passwordAnciao" [(ngModel)]="member.password" required autofocus />
+            <small class="p-error" *ngIf="submitted && !member.password">Senha é obrigatorio.</small>
+          </div>
+          <div class="field">
+            <label for="phone">Telefone</label>
+            <input type="text" pInputText id="phoneAnciao" [(ngModel)]="member.phone" required autofocus />
+            <small class="p-error" *ngIf="submitted && !member.phone">Telefone é obrigatorio.</small>
+          </div>
+          <div class="field">
+            <label for="role">Tipo de usuario:</label>
+            <p-selectButton [options]="roles" name="role" [(ngModel)]="member.role" optionLabel="name" optionValue="value"></p-selectButton>
+            <small class="p-error" *ngIf="submitted && !member.role">TIpo de usuario é obrigatorio.</small>
+          </div>
+      </ng-template>
+      <ng-template pTemplate="footer">
+          <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideAnciaoDialog()"></button>
+          <button pButton pRipple label="Adicionar" icon="pi pi-check" class="p-button-text" (click)="addAnciao()"></button>
+      </ng-template>
+  </p-dialog>
+  <p-dialog [(visible)]="memberDialog" [style]="{width: '450px'}" header="Nome da nova congregação" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+      <div class="field">
+        <label for="memberId">Id da Congregação</label>
+        <input type="text" pInputText id="memberId" [(ngModel)]="member.congregationId" readonly />
+    </div>
+    <div class="field">
+      <label for="membersName">Nome da congregação</label>
+      <input type="text" pInputText id="membersName" [(ngModel)]="member.congregationName" readonly />
+  </div>
+        <div class="field">
+            <label for="anciaoName">Name</label>
+            <input type="text" pInputText id="nameAnciao" [(ngModel)]="member.name" required autofocus />
+            <small class="p-error" *ngIf="submitted && !member.name">Nome é obrigatorio.</small>
+        </div>
+        <div class="field">
+          <label for="email">E-mail</label>
+          <input type="text" pInputText id="emailAnciao" [(ngModel)]="member.email" required autofocus />
+          <small class="p-error" *ngIf="submitted && !member.email">E-mail é obrigatorio.</small>
+        </div>
+        <div class="field">
+          <label for="password">Senha</label>
+          <input type="password" pInputText id="passwordAnciao" [(ngModel)]="member.password" required autofocus />
+          <small class="p-error" *ngIf="submitted && !member.password">Senha é obrigatorio.</small>
+        </div>
+        <div class="field">
+          <label for="phone">Telefone</label>
+          <input type="text" pInputText id="phoneAnciao" [(ngModel)]="member.phone" required autofocus />
+          <small class="p-error" *ngIf="submitted && !member.phone">Telefone é obrigatorio.</small>
+        </div>
+        <div class="field">
+          <label for="role">Tipo de usuario:</label>
+          <p-selectButton [options]="roles" name="role" [(ngModel)]="member.role" optionLabel="name" optionValue="value"></p-selectButton>
+          <small class="p-error" *ngIf="submitted && !member.role">TIpo de usuario é obrigatorio.</small>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Salvar" icon="pi pi-check" class="p-button-text" (click)="savemember()"></button>
+    </ng-template>
+</p-dialog>
+<p-dialog [(visible)]="superUserDialog" [style]="{width: '450px'}" header="Crie um Super User" [modal]="true" styleClass="p-fluid">
+  <ng-template pTemplate="content">
+      <div class="field">
+          <label for="superUserName">Name</label>
+          <input type="text" pInputText id="superUserName" [(ngModel)]="superUser.name" required autofocus />
+          <small class="p-error" *ngIf="submitted && !superUser.name">Nome é obrigatorio.</small>
+      </div>
+      <div class="field">
+        <label for="superUserEmail">E-mail</label>
+        <input type="text" pInputText id="superUserEmail" [(ngModel)]="superUser.email" required autofocus />
+        <small class="p-error" *ngIf="submitted && !superUser.email">E-mail é obrigatorio.</small>
+    </div>
+    <div class="field">
+      <label for="superUserPassword">Senha</label>
+      <input type="password" pInputText id="superUserPassword" [(ngModel)]="superUser.password" required autofocus />
+      <small class="p-error" *ngIf="submitted && !superUser.password">Senha é obrigatorio.</small>
+  </div>
+  </ng-template>
+  <ng-template pTemplate="footer">
+      <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" (click)="hideSuperUser()"></button>
+      <button pButton pRipple label="Salvar" icon="pi pi-check" class="p-button-text" (click)="addSuperUser()"></button>
+  </ng-template>
+</p-dialog>
+  <p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
+
+  </section>
 
 <app-footer-green></app-footer-green>
