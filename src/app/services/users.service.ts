@@ -1,6 +1,6 @@
 import { User } from './../interfaces/interfaces';
 import { environment } from './../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHandler, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -27,10 +27,17 @@ export class UsersService {
   }
   getOneUser(user: User | any){
     user.token = localStorage.getItem('jwt-token')
-    return this.http.post(environment.paths.users.userRoutes , user, {observe: 'response', withCredentials: true})
+    return this.http.post(environment.paths.users.userRoutes + 'getone' , user, {observe: 'response', withCredentials: true})
   }
   getUserByCongregation(_id: any){
-    _id.token = localStorage.getItem('jwt-token')
-    return this.http.post(environment.paths.users.userByCongragation, _id, {observe: 'response', withCredentials: true})
+    let user = {
+      _id: _id,
+    token: localStorage.getItem('jwt-token')
+    }
+    return this.http.post(environment.paths.users.userByCongragation, user, {observe: 'response', withCredentials: true})
+  }
+  addRegistry(user: User | any){
+    user.token = localStorage.getItem('jwt-token')
+    return this.http.patch(environment.paths.users.userRoutes+'add/', user, {observe: 'response', withCredentials: true})
   }
 }

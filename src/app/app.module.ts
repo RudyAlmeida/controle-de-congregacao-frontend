@@ -46,6 +46,7 @@ import { SuperUserDashboardComponent } from './superuser/dashboard/dashboard.com
 import { SelectButtonModule } from 'primeng/selectbutton';
 
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -89,7 +90,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
     ConfirmDialogModule,
     InputTextareaModule,
     SelectButtonModule
-  ],
+    ],
   providers: [
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
     JwtHelperService,
